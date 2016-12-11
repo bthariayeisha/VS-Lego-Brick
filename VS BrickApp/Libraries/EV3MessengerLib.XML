@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EV3MessengerLib</name>
+    </assembly>
+    <members>
+        <member name="P:EV3MessengerLib.Communication.Communicator.IsConnected">
+            <summary>
+            The connection state. True if connected, false otherwise.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Communication.Communicator.Port">
+            <summary>
+            Gets the serial port name if connected. Returns the port name or null of not connected.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Communication.Communicator.#ctor">
+            <summary>
+            Creates an object for communicating (serial over Bluetooth) with the EV3.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Communication.Communicator.Connect(System.String)">
+            <summary>
+            Connects to the given serial port.
+            If the conncection succeeded, then reading of messages will start.
+            </summary>
+            <param name="port">The port to connect to. E.g. "COM1", "COM8", etc.</param>
+            <returns>True if the connection was made, false otherwise.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.Communication.Communicator.Send(System.Byte[])">
+            <summary>
+            Send a raw message.
+            </summary>
+            <param name="rawMessage">The message to send (for valid format, see FieldInfo class)</param>
+            <returns>True if send, false otherwise.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.Communication.Communicator.Disconnect">
+            <summary>
+            Close the current connection and stop the reading of messages.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Communication.Communicator.GetNextReadPayload">
+            <summary>
+            Get the next payload from the queue of read payloads.
+            </summary>
+            <returns>the next payload or null if no payload was read yet.</returns>
+        </member>
+        <member name="T:EV3MessengerLib.EV3Messenger">
+            <summary>
+            Makes it possible to send and receive bluetooth messages 
+            from the Lego Mindstorms EV3 robot.
+            </summary>
+        </member>
+        <member name="F:EV3MessengerLib.EV3Messenger.communicator">
+            <summary>
+            Handles communication with the EV3 (serial over bluetooth)
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.EV3Messenger.IsConnected">
+            <summary>
+            If connected returns true, else false
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.EV3Messenger.Port">
+            <summary>
+            The serial port used for the connection or null if not connected.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.#ctor">
+            <summary>
+            Creates a new  instance of the EV3Messenger class.
+            Used for communicating with the Lego Mindstorms EV3 robot 
+            using serial over bluetooth.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.Connect(System.String)">
+            <summary>
+            Connects to the EV3 using the given serial port.
+            </summary>
+            <param name="port">The serial port to use for communicating with
+                               the EV3. E.g. "COM1", "COM8", etc.</param>
+            <returns>True if connected, false if not connected.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.Disconnect">
+            <summary>
+            Disconnects from the EV3.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.SendMessage(System.String,System.String)">
+            <summary>
+            Sends a text value to the connected EV3.
+            </summary>
+            <param name="title">The title of the message. 
+                                The length of the title may be atmost 254 characters.</param>
+            <param name="value">The value of the message.
+                                The length of the value may be atmost 254 characters.
+                                Note: The EV3 protocol allows a text value to be of size 65534, but thats way too long for the slow transmission speed)
+                                </param>
+            <returns>True if the message was send, false otherwise.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.SendMessage(System.String,System.Single)">
+            <summary>
+            Sends a number value to the connected EV3.
+            </summary>
+            <param name="title">The title of the message. 
+                                The length of the title may be atmost 254 characters.</param>
+            <param name="value">The value of the message.</param>
+            <returns>True if the message was send, false otherwise.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.SendMessage(System.String,System.Boolean)">
+            <summary>
+            Sends a logic value to the connected EV3.
+            </summary>
+            <param name="title">The title of the message.
+                                The length of the title may be atmost 254 characters.</param>
+            <param name="value">The value of the message.</param>
+            <returns>True if the message was send, false otherwise.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Messenger.ReadMessage">
+            <summary>
+            Reads a message from the connected EV3. 
+            </summary>
+            <returns>The read message or null if no message is available.
+            </returns>
+        </member>
+        <member name="T:EV3MessengerLib.EV3Message">
+            <summary>
+            A message received from the Lego Mindstorms EV3 robot.
+            
+            Each message has a mailbox title and a value property. 
+            The value can be of the type Text, Number or Logic.
+            
+            Please keep in mind that you cannot determine the type of the received value.
+            The rule is: what you send is what you get. 
+            (actually, this is not different from using the message blocks in the EV3 
+            programming environment from Lego)
+            
+            If you send a Number, then at the receiving side, 
+            get the value as a number using the ValueAsNumber property of the message.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.EV3Message.MailboxTitle">
+            <summary>
+            The mailbox title of this message.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.EV3Message.ValueAsText">
+            <summary>
+            The value interpreted as text.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.EV3Message.ValueAsNumber">
+            <summary>
+            The value interpreted as a number.
+            The EV3 uses single precision floating point numbers internally.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.EV3Message.ValueAsLogic">
+            <summary>
+            The value interpreted as logic value.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Message.#ctor(EV3MessengerLib.Protocol.Payload)">
+            <summary>
+            Creates a message from a payload.
+            (facade: hides complexity of the underlying protocol)
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:EV3MessengerLib.EV3Message.ToString">
+            <summary>
+            Returns a debug string.
+            </summary>
+            <returns>Returns a debug string.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.ArrayHelper.Concatenate(System.Byte[],System.Byte[])">
+            <summary>
+            Concatenates 2 byte arrays.
+            </summary>
+            <param name="array1">Array to concatenate.</param>
+            <param name="array2">Array to concatenate.</param>
+            <returns>array1 + array2, if both array1 and array2 2 are not null.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.ArrayHelper.Remove(System.Byte[],System.Int32)">
+            <summary>
+            Removes all elements until (excluding) the given index
+            </summary>
+            <param name="array"></param>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.ArrayHelper.IndexOf(System.Byte[],System.Byte[])">
+            <summary>
+            Find a sequence of bytes in the given array.
+            </summary>
+            <param name="sequence">The sequence to find.</param>
+            <param name="array">The array to search.</param>
+            <returns>The index of the sequence or -1 if the sequence is not found.</returns>
+        </member>
+        <member name="T:EV3MessengerLib.Protocol.Payload">
+            <summary>
+            The parsed payload from the EV3 Bluetooth (raw) message.
+            See the FieldInfo class for the format of the message.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Protocol.Payload.Title">
+            <summary>
+            The title.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Protocol.Payload.Value">
+            <summary>
+            The value. 
+            The value can be parsed to EV3 formats like text, number and logic 
+            using the ValueConverter class.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.Payload.#ctor(System.String,System.Byte[])">
+            <summary>
+            Creates a new  instance of the Payload class.
+            Used for storing the title and value from EV3 bleutooth messages.
+            </summary>
+            <param name="title"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:EV3MessengerLib.Protocol.FieldInfo">
+            <summary>
+            Information on the fields that are contained within the payload of 
+            an EV3 bluetooth message.
+            
+            Each EV3 message contains a Title (mailbox title) and a Value.
+            
+            Example payload (actually captured from an EV3)
+            -----------------------------------------------          
+                       
+                            Field names:
+                            -------------
+            Byte:  0  0x12  PayloadSize : Byte 0 and 1 contain the size (bytes) of the payload.
+                   1  0x00                The size counting starts at byte 2. Here: 00 12 (hex) = 18 (dec)
+                   -------
+                   2  0x01  SecretHeader: Byte 2..5 contain a header (just a guess)
+                   3  0x00                The contents are unknown, but every message has these values here.
+                   4  0x81                 
+                   5  0x9E
+                   -------
+                   6  0x05  TitleSize   : Byte 6 contains the size (bytes) of the Title field, which follows.
+                   -------
+                   7  0x70  Title       : The title text string (ascii). Here: "ping"
+                   8  0x69                The last character is always 0x00.
+                   9  0x6E               
+                  10  0x67
+                  11  0x00
+                  --------
+                  12  0x06  ValueSize   : Byte (6 + TitleSize + 1) contains the size (bytes) of the Value field which follows.
+                  13  0x00                Here: 00 06 (hex) = 6 (dec)
+                  --------
+                  14  0x68  Value       : The value. Here the text: "hello"
+                  15  0x65                The value field can contain:
+                  16  0x6C                - Text (length: variable, ends with 0x00) ---> string                 
+                  17  0x6C                - Number (length: 4 bytes)                ---> float (Single)
+                  18  0x6F                - Logic (length: 1 byte)                  ---> bool
+                  19  0x00
+                  
+            </summary>
+        </member>
+        <member name="F:EV3MessengerLib.Protocol.FieldInfo.SecretHeader">
+            <summary>
+            The contents of the secret header (secret as in 'I dont know whats in it,
+            but all payloads have it)
+            The header is the only thing I can recognize the start of a payload with.
+            
+            TODO: What are the values in this sequence? Are they the same on every EV3?
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Protocol.FieldInfo.PayloadSizeIndex">
+            <summary>
+            The index of the PayloadSize field.
+            This field contains 2 bytes stating the size (bytes)
+            of the payload. The size count starts AFTER these 2 bytes.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Protocol.FieldInfo.SecretHeaderIndex">
+            <summary>
+            The index of the secret header.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Protocol.FieldInfo.TitleSizeIndex">
+            <summary>
+            The index of the TitleSize field.
+            This field contains 2 bytes stating the size (bytes) of the Title field.
+            </summary>
+        </member>
+        <member name="P:EV3MessengerLib.Protocol.FieldInfo.TitleIndex">
+            <summary>
+            The index of the Title field.
+            The Title field contains the title of a message.
+            It always ends with 0x00.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.FieldInfo.ValueSizeIndex(System.Int32)">
+            <summary>
+            The index of the ValueSize field. Depends on the size of the title.
+            </summary>
+            <param name="titleSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.FieldInfo.ValueIndex(System.Int32)">
+            <summary>
+            The index of the Value field. Depends on the size of the title.
+            </summary>
+            <param name="titleSize"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EV3MessengerLib.Protocol.PayloadParser">
+            <summary>
+            Parser that looks for EV3 Bluetooth (raw) messages in a byte buffer
+            and parses the found messages to payload objects.
+            
+            The format of raw EV3 bt message can be found in the description of the FieldInfo class.
+            
+            ... And yes, this class throws exceptions from non public members that are called with 
+                invalid parameters :-)
+            </summary>
+        </member>
+        <member name="F:EV3MessengerLib.Protocol.PayloadParser.dataToParse">
+            <summary>
+            Buffer used to store data which is searched for a payload.
+            TODO: Rewrite using MemoryStream or List with bytes for better performance?
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.#ctor">
+            <summary>
+            Creates a new  instance of the PayloadParser class.
+            </summary>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.AppendData(System.Byte[])">
+            <summary>
+            Append data to the internal buffer wich is used to search for payloads.
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.FindAndRemoveNextPayload">
+            <summary>
+            Find a payload in the buffered data.
+            The payload is removed from the buffer when returned.
+            </summary>
+            <returns>A payload if found, null otherwise.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.ParseTitle(System.Byte[],System.Int32)">
+            <summary>
+            Get the title from the payload that starts at a given index in a bytebuffer.
+            </summary>
+            <param name="data">The buffer to read the title from.</param>
+            <param name="startIndexOfPayload">The start index of the payload.</param>
+            <returns>Returns null if TitleSize or Title fields could not be parsed. </returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.ParseValue(System.Byte[],System.Int32)">
+            <summary>
+            Get the value from the payload that starts at a given index in a bytebuffer.
+            </summary>
+            <param name="data">The buffer to read the value from.</param>
+            <param name="startIndexOfPayload">The start index of the payload.</param>
+            <returns>Returns null if ValueSize or Value fields could not be parsed. </returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.FindStartIndexOfPayload(System.Byte[])">
+            <summary>
+            Find the start index of a payload.
+            See FieldInfo for info about the fields in the payload.
+            </summary>
+            <param name="data">The buffer to seek in.</param>
+            <returns>The index where the payload starts, or -1 if not found.</returns>
+        </member>
+        <member name="M:EV3MessengerLib.Protocol.PayloadParser.ClearData">
+            <summary>
+            Removes all data from the buffer.
+            </summary>
+        </member>
+        <member name="T:EV3MessengerLib.Protocol.ValueConverter">
+            <summary>
+            Contains methods to parse the value field of the payload
+            to the desired EV3 format (text, number, logic),
+            </summary>
+        </member>
+    </members>
+</doc>
